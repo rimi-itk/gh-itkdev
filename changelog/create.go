@@ -34,32 +34,42 @@ func getRepositoryUrl() (string, error) {
 	return url, nil
 }
 
+func createChangelog(name string, repositoryUrl string) (string, error) {
+	tmpl, err := template.New("changelog").Parse(changelogTemplate)
+	if err != nil {
+		return "", fmt.Errorf("error reading changelog template: %s", err)
+	}
+
+	file, err := os.Create(name)
+	if err != nil {
+		return "", fmt.Errorf("cannot create file %s (%s)", name, err)
+	}
+	defer file.Close()
+
+	err = tmpl.Execute(file, map[string]string{
+		"RepositoryUrl": repositoryUrl,
+	})
+	if err != nil {
+		return "", fmt.Errorf("error rendering changelog template: %s", err)
+	}
+
+	return fmt.Sprintf("New changelog written to %s", name), nil
+}
+
 func Create(name string) {
 	if _, err := os.Stat(name); err == nil {
 		log.Fatalf("File %s already exist", name)
 	}
 
-	remote, err := getRepositoryUrl()
+	repositoryUrl, err := getRepositoryUrl()
 	if err != nil {
 		log.Fatalf("error getting repository url: %s", err)
 	}
 
-	tmpl, err := template.New("changelog").Parse(changelogTemplate)
+	message, err := createChangelog(name, repositoryUrl)
 	if err != nil {
-		log.Fatalf("error reading changelog template: %s", err)
+		log.Fatalf("error creating changelog %s: %s", name, err)
 	}
 
-	file, err := os.Create(name)
-	if err != nil {
-		log.Fatalf("cannot create file %s (%s)", name, err)
-	}
-
-	err = tmpl.Execute(file, map[string]string{
-		"RepositoryUrl": remote,
-	})
-	if err != nil {
-		log.Fatalf("error rendering changelog template: %s", err)
-	}
-
-	fmt.Printf("New changelog written to %s\n", name)
+	fmt.Println(message)
 }
