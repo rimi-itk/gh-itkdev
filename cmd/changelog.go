@@ -13,6 +13,8 @@ var (
 	fuckingChangelog        bool
 	pullRequestItemTemplate string = `* [PR-{{ .Number }}]({{ .Url }})
   {{ .Title }}`
+	release       string
+	baseBranch    string = "develop"
 	changelogName string = "CHANGELOG.md"
 
 	changelogCmd = &cobra.Command{
@@ -23,6 +25,8 @@ var (
 				changelog.Create(changelogName)
 			} else if fuckingChangelog {
 				changelog.FuckingChangelog(changelogName, pullRequestItemTemplate)
+			} else if release != "" {
+				changelog.Release(release, baseBranch, changelogName)
 			} else {
 				cmd.Usage()
 			}
@@ -36,5 +40,7 @@ func init() {
 	changelogCmd.Flags().BoolVarP(&create, "create", "", false, fmt.Sprintf("create a changelog (%q) if it does not exist", changelogName))
 	changelogCmd.Flags().BoolVarP(&fuckingChangelog, "fucking-changelog", "", false, "add missing pull request entry to changelog")
 	changelogCmd.Flags().StringVarP(&pullRequestItemTemplate, "item-template", "", pullRequestItemTemplate, "pull request item template")
+	changelogCmd.Flags().StringVarP(&release, "release", "", "", "create a release branch with updated changelog")
+	changelogCmd.Flags().StringVarP(&baseBranch, "base", "", baseBranch, "base branch for release")
 	changelogCmd.Flags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
 }
