@@ -3,11 +3,10 @@ package changelog
 import (
 	"fmt"
 	"log"
-	"net/url"
 	"os"
-	"os/exec"
-	"strings"
 	"text/template"
+
+	"github.com/cli/go-gh"
 )
 
 // Cf. https://raw.githubusercontent.com/olivierlacan/keep-a-changelog/main/CHANGELOG.md
@@ -25,21 +24,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 `
 
 func getRepositoryUrl() (string, error) {
-	remote := "origin"
-	cmd := exec.Command("git", "remote", "get-url", remote)
-	output, err := cmd.CombinedOutput()
+	repository, err := gh.CurrentRepository()
 	if err != nil {
-		return "", fmt.Errorf("error getting git remote %s (%s)", remote, err)
+		return "", fmt.Errorf("error getting repository: %s", err)
 	}
 
-	// Remove user from URL
-	url, err := url.Parse(strings.TrimSpace(string(output)))
-	if err != nil {
-		return "", err
-	}
-	url.User = nil
+	url := fmt.Sprintf("https://%s/%s/%s", repository.Host(), repository.Owner(), repository.Name())
 
-	return url.String(), nil
+	return url, nil
 }
 
 func Create(name string) {

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,7 +19,7 @@ func TestCreate(t *testing.T) {
 	r, w, _ := os.Pipe()
 	os.Stdout = w
 
-	name := os.TempDir() + "/changelog_test.md"
+	name := strings.TrimRight(os.TempDir(), "/") + "/changelog_test.md"
 	defer os.Remove(name)
 	Create(name)
 	assert.FileExists(t, name)

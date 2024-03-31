@@ -9,7 +9,10 @@ import (
 
 // changelogCmd represents the changelog command
 var (
-	create        bool
+	create                  bool
+	fuckingChangelog        bool
+	pullRequestItemTemplate string = `* [PR-{{ .Number }}]({{ .Url }})
+  {{ .Title }}`
 	changelogName string = "CHANGELOG.md"
 
 	changelogCmd = &cobra.Command{
@@ -18,6 +21,8 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 			if create {
 				changelog.Create(changelogName)
+			} else if fuckingChangelog {
+				changelog.FuckingChangelog(changelogName, pullRequestItemTemplate)
 			} else {
 				cmd.Usage()
 			}
@@ -29,5 +34,7 @@ func init() {
 	rootCmd.AddCommand(changelogCmd)
 
 	changelogCmd.Flags().BoolVarP(&create, "create", "", false, fmt.Sprintf("create a changelog (%q) if it does not exist", changelogName))
+	changelogCmd.Flags().BoolVarP(&fuckingChangelog, "fucking-changelog", "", false, "add missing pull request entry to changelog")
+	changelogCmd.Flags().StringVarP(&pullRequestItemTemplate, "item-template", "", pullRequestItemTemplate, "pull request item template")
 	changelogCmd.Flags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
 }
