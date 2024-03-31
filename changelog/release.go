@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func createRelease(release string, base string) (string, error) {
+func createReleaseBranch(release string, base string) (string, error) {
 	branch := "release/" + release
 	cmd := exec.Command("git", "checkout", "-b", branch, base)
 	output, err := cmd.CombinedOutput()
@@ -24,20 +24,14 @@ func createRelease(release string, base string) (string, error) {
 	return branch, nil
 }
 
-func updateChangelog(name string, release string) (string, error) {
-	file, err := os.Open(name)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
+func updateReleaseChangelog(changelog string, release string) (string, error) {
 	headerPattern := regexp.MustCompile(`(?i)^\#+ +\[unreleased\]`)
 	unreleasedHeaderIndex := -1
 	linkUnreleasedPattern := regexp.MustCompile(`(?i)^\[unreleased\]: (.+)`)
 	linkUnreleasedIndex := -1
 
 	var lines []string
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(strings.NewReader(changelog))
 	for scanner.Scan() {
 		line := scanner.Text()
 		if headerPattern.MatchString(line) {
@@ -48,16 +42,15 @@ func updateChangelog(name string, release string) (string, error) {
 		lines = append(lines, line)
 	}
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		return "", err
 	}
-	file.Close()
 
 	if unreleasedHeaderIndex < 0 {
-		log.Fatalf("cannot find \"Unreleased\" header in %s", name)
+		return "", fmt.Errorf("cannot find \"Unreleased\"")
 	} else if linkUnreleasedIndex < 0 {
-		log.Fatalf("cannot find \"Unreleased\" link in %s", name)
+		return "", fmt.Errorf("cannot find \"Unreleased\" link")
 	} else if linkUnreleasedIndex < unreleasedHeaderIndex {
-		log.Fatalf("\"Unreleased\" link must come after header in %s", name)
+		return "", fmt.Errorf("\"Unreleased\" link must come after header")
 	}
 
 	// ----------------------------------------------------------------
@@ -67,7 +60,7 @@ func updateChangelog(name string, release string) (string, error) {
 	match := linkUnreleasedPattern.FindStringSubmatch(lines[linkUnreleasedIndex])
 	url, err := url.Parse(match[1])
 	if err != nil {
-		log.Fatalf("invalid url: %s", match[1])
+		return "", fmt.Errorf("invalid url: %s", match[1])
 	}
 	url.Path = fmt.Sprintf("compare/%s...HEAD", release)
 	unreleasedLink := fmt.Sprintf("[Unreleased]: %s", url)
@@ -112,25 +105,29 @@ func updateChangelog(name string, release string) (string, error) {
 
 	// ----------------------------------------------------------------
 
-	content := strings.Join(lines, "\n") + "\n"
-	if err := os.WriteFile(name, []byte(content), 0644); err != nil {
-		log.Fatal(err)
-	}
-
-	return item, nil
+	return strings.Join(lines, "\n") + "\n", nil
 }
 
 func Release(release string, base string, name string) {
-	branch, err := createRelease(release, base)
+	b, err := os.ReadFile(name)
+	if err != nil {
+		log.Fatal(err)
+	}
+	changelog := string(b)
+
+	updatedChangelog, err := updateReleaseChangelog(changelog, release)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	branch, err := createReleaseBranch(release, base)
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Printf("Branch %s created\n", branch)
 
-	updateChangelog(name, release)
+	os.WriteFile(name, []byte(updatedChangelog), 0644)
+	fmt.Printf("Updated changelog written to %s\n", name)
 
-	cmd := exec.Command("git", "diff", name)
-	output, _ := cmd.CombinedOutput()
-	fmt.Println(string(output))
+	showDiff(name)
 }

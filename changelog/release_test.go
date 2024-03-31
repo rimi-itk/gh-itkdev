@@ -1,7 +1,6 @@
 package changelog
 
 import (
-	"os"
 	"strings"
 	"testing"
 	"time"
@@ -92,18 +91,8 @@ func TestRelease(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		file, _ := os.CreateTemp("", "CHANGELOG.md")
-		defer os.Remove(file.Name())
+		actual, _ := updateReleaseChangelog(testCase.changelog, testCase.release)
 
-		name := file.Name()
-		file.Write([]byte(testCase.changelog))
-
-		assert.FileExists(t, name)
-
-		updateChangelog(name, testCase.release)
-
-		bytes, _ := os.ReadFile(name)
-		actual := string(bytes)
 		assert.Equal(t, strings.ReplaceAll(testCase.expected, "%TODAY%", time.Now().Format("2006-01-02")), actual)
 	}
 }

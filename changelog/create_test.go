@@ -1,9 +1,6 @@
 package changelog
 
 import (
-	"fmt"
-	"os"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,39 +9,19 @@ import (
 // https://cs.opensource.google/go/go/+/refs/tags/go1.22.1:src/testing/run_example.go
 
 func TestCreate(t *testing.T) {
-	name := strings.TrimRight(os.TempDir(), "/") + "/changelog_test.md"
-	defer os.Remove(name)
-	message, _ := createChangelog(name, "htts://example.com/")
-	assert.FileExists(t, name)
-	os.Remove(name)
-	assert.Equal(t, fmt.Sprintf("New changelog written to %s", name), message)
+	repositoryUrl := "https://example.com"
+	expected := `# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+[Unreleased]: https://example.com
+`
+	actual, _ := createChangelog(repositoryUrl)
+
+	assert.Equal(t, expected, actual)
 }
-
-// func TestCreateAlreadyExists(t *testing.T) {
-// 	// @see https://stackoverflow.com/a/10476304
-// 	old := os.Stdout // keep backup of the real stdout
-// 	r, w, _ := os.Pipe()
-// 	os.Stdout = w
-
-// 	name := os.TempDir() + "changelog_test.md"
-// 	os.Create(name)
-// 	defer os.Remove(name)
-// 	Create(name)
-// 	assert.FileExists(t, name)
-// 	os.Remove(name)
-
-// 	outC := make(chan string)
-// 	// copy the output in a separate goroutine so printing can't block indefinitely
-// 	go func() {
-// 		var buf bytes.Buffer
-// 		io.Copy(&buf, r)
-// 		outC <- buf.String()
-// 	}()
-
-// 	// back to normal state
-// 	w.Close()
-// 	os.Stdout = old // restoring the real stdout
-// 	out := <-outC
-
-// 	assert.Equal(t, fmt.Sprintf("New changelog written to %s\n", name), out)
-// }

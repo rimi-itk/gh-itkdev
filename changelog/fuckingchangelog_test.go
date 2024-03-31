@@ -1,7 +1,6 @@
 package changelog
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -12,14 +11,14 @@ func TestFuckingChangelog(t *testing.T) {
   {{ .Title }}`
 	testCases := []struct {
 		changelog    string
-		pullRequest  PullRequest
+		pullRequest  pullRequest
 		itemTemplate string
 		expected     string
 	}{
 		{
 			`## [Unreleased]
 `,
-			PullRequest{
+			pullRequest{
 				Number: 87,
 				Title:  "Test",
 				Url:    "https://example.com/pr/87",
@@ -37,7 +36,7 @@ func TestFuckingChangelog(t *testing.T) {
 
 [Unreleased]: https://example.com/
 `,
-			PullRequest{
+			pullRequest{
 				Number: 87,
 				Title:  "Test",
 				Url:    "https://example.com/pr/87",
@@ -58,7 +57,7 @@ func TestFuckingChangelog(t *testing.T) {
 * [PR-42](https://example.com/pr/42)
   Added the meaning
 `,
-			PullRequest{
+			pullRequest{
 				Number: 87,
 				Title:  "Test",
 				Url:    "https://example.com/pr/87",
@@ -78,7 +77,7 @@ func TestFuckingChangelog(t *testing.T) {
 
 - [#42](https://example.com/pr/42): Added the meaning
 `,
-			PullRequest{
+			pullRequest{
 				Number: 87,
 				Title:  "Test",
 				Url:    "https://example.com/pr/87",
@@ -93,18 +92,8 @@ func TestFuckingChangelog(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		file, _ := os.CreateTemp("", "CHANGELOG.md")
-		defer os.Remove(file.Name())
+		actual, _ := addPullRequest(testCase.changelog, testCase.pullRequest, testCase.itemTemplate)
 
-		name := file.Name()
-		file.Write([]byte(testCase.changelog))
-
-		assert.FileExists(t, name)
-
-		addPullRequest(name, testCase.pullRequest, testCase.itemTemplate)
-
-		bytes, _ := os.ReadFile(name)
-		actual := string(bytes)
 		assert.Equal(t, testCase.expected, actual)
 	}
 }
