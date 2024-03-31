@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.0.0] - 2024-04-01
+
 * [PR-3](https://github.com/rimi-itk/gh-itkdev/pull/3)
   Added commit flag
 * [PR-2](https://github.com/rimi-itk/gh-itkdev/pull/2)
   Added changelog command
 
-[Unreleased]: https://github.com/rimi-itk/gh-itkdev
+[Unreleased]: https://github.com/compare/v0.0.0...HEAD
+[v0.0.0]: https://github.com/releases/tag/v0.0.0
