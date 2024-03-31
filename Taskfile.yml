@@ -1,0 +1,38 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - task: format
+      - task: check
+      - go mod tidy
+      - go build
+    # silent: true
+
+  format:
+    cmds:
+      - go fmt ./...
+    # silent: true
+
+  check:
+    cmds:
+      - go vet ./...
+    # silent: true
+
+  test:
+    deps:
+      - build
+    cmds:
+      - go test -v ./...
+    # silent: true
+
+  dev:coding-standards:check:
+    cmds:
+      - task: dev:coding-standards:apply
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md'
+
+  dev:coding-standards:apply:
+    cmds:
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md' --fix
