@@ -108,7 +108,7 @@ func updateReleaseChangelog(changelog string, release string) (string, error) {
 	return strings.Join(lines, "\n") + "\n", nil
 }
 
-func Release(release string, base string, name string) {
+func Release(release string, base string, name string, commit bool) {
 	b, err := os.ReadFile(name)
 	if err != nil {
 		log.Fatal(err)
@@ -129,5 +129,10 @@ func Release(release string, base string, name string) {
 	os.WriteFile(name, []byte(updatedChangelog), 0644)
 	fmt.Printf("Updated changelog written to %s\n", name)
 
-	showDiff(name)
+	if commit {
+		gitCommit([]string{name}, fmt.Sprintf("Release %s", release))
+		fmt.Println("Updated changelog committed")
+	} else {
+		gitDiff([]string{name})
+	}
 }

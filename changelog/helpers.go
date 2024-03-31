@@ -3,6 +3,7 @@ package changelog
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os/exec"
 
 	"github.com/cli/go-gh"
@@ -14,9 +15,33 @@ func isChanged(name string) bool {
 	return cmd.Run() != nil
 }
 
-func showDiff(name string) {
-	cmd := exec.Command("git", "diff", name)
-	output, _ := cmd.CombinedOutput()
+func gitDiff(files []string) {
+	cmd := exec.Command("git", append([]string{"diff"}, files...)...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(output))
+}
+
+func gitCommit(files []string, message string) {
+	cmd := exec.Command("git", append([]string{"add"}, files...)...)
+	_, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cmd = exec.Command("git", "commit", "--message", message)
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cmd = exec.Command("git", "log", "--patch-with-stat", "--max-count", "1")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(string(output))
 }
 

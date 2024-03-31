@@ -82,5 +82,5 @@ func FuckingChangelog(name string, itemTemplate string) {
 	os.WriteFile(name, []byte(updatedChangelog), 0644)
 	fmt.Printf("Updated changelog written to %s\n", name)
 
-	showDiff(name)
+	gitDiff([]string{name})
 }
