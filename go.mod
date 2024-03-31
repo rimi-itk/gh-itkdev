@@ -1,6 +1,6 @@
 module github.com/rimi-itk/gh-itkdev
 
-go 1.22.1
+go 1.22
 
 require (
 	github.com/cli/go-gh v1.2.1
