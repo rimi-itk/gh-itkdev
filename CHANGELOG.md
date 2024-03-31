@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-3](https://github.com/rimi-itk/gh-itkdev/pull/3)
+  Added commit flag
 * [PR-2](https://github.com/rimi-itk/gh-itkdev/pull/2)
   Added changelog command
 
