@@ -29,10 +29,12 @@ tasks:
     # silent: true
 
   dev:coding-standards:check:
+    desc: Apply and check coding standards
     cmds:
       - task: dev:coding-standards:apply
       - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md'
 
   dev:coding-standards:apply:
+    desc: Apply coding standards
     cmds:
       - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '**/*.md' --fix
