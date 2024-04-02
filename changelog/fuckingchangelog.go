@@ -45,7 +45,7 @@ func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (stri
 	item := builder.String()
 
 	// If content right after insertion point is a header or a link, we insert a blank line
-	if insertIndex < len(lines) && regexp.MustCompile(`^[\[$]`).MatchString(lines[insertIndex]) {
+	if insertIndex < len(lines) && regexp.MustCompile(`^[\[#]`).MatchString(lines[insertIndex]) {
 		item += "\n"
 	}
 

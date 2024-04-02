@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-6](https://github.com/rimi-itk/gh-itkdev/pull/6)
+  Bugfix
 * [PR-5](https://github.com/rimi-itk/gh-itkdev/pull/5)
   Updated usage documentation
 
