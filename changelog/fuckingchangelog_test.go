@@ -89,6 +89,29 @@ func TestFuckingChangelog(t *testing.T) {
 - [#42](https://example.com/pr/42): Added the meaning
 `,
 		},
+
+		{
+			`## [Unreleased]
+
+## [v0.0.0] - 2001-01-01
+
+- [#42](https://example.com/pr/42): Added the meaning
+`,
+			pullRequest{
+				Number: 87,
+				Title:  "Test",
+				Url:    "https://example.com/pr/87",
+			},
+			`- [#{{ .Number }}]({{ .Url }}): {{ .Title }}`,
+			`## [Unreleased]
+
+- [#87](https://example.com/pr/87): Test
+
+## [v0.0.0] - 2001-01-01
+
+- [#42](https://example.com/pr/42): Added the meaning
+`,
+		},
 	}
 
 	for _, testCase := range testCases {
