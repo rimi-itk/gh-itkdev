@@ -14,4 +14,4 @@ jobs:
       - uses: cli/gh-extension-precompile@v1
         with:
           # @TODO https://github.com/cli/gh-extension-precompile/issues/50#issuecomment-1980217293
-          go_version: 1.21
+          go_version: 1.22

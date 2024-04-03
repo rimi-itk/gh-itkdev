@@ -9,7 +9,12 @@ gh extension install rimi-itk/gh-itkdev
 ```
 
 **Note**: This may not (yet) work (cf. <https://github.com/rimi-itk/gh-itkdev/actions/workflows/release.yml>) and you
-can [install from source](https://cli.github.com/manual/gh_extension_install) by running
+may have to [install from source](#installing-from-source).
+
+### Installing from source
+
+Assuming [Go is installed](https://go.dev/doc/install), you can [install from
+source](https://cli.github.com/manual/gh_extension_install) by running
 
 ``` shell
 git clone https://github.com/rimi-itk/gh-itkdev /tmp/gh-itkdev
