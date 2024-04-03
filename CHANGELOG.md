@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v0.0.1] - 2024-04-03
+
 * [PR-6](https://github.com/rimi-itk/gh-itkdev/pull/6)
   Bugfix
 * [PR-5](https://github.com/rimi-itk/gh-itkdev/pull/5)
@@ -19,5 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [PR-2](https://github.com/rimi-itk/gh-itkdev/pull/2)
   Added changelog command
 
-[Unreleased]: https://github.com/compare/v0.0.0...HEAD
+[Unreleased]: https://github.com/compare/v0.0.1...HEAD
+[v0.0.1]: https://github.com/compare/v0.0.0...v0.0.1
 [v0.0.0]: https://github.com/releases/tag/v0.0.0
