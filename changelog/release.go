@@ -27,7 +27,8 @@ func createReleaseBranch(release string, base string) (string, error) {
 func updateReleaseChangelog(changelog string, release string) (string, error) {
 	headerPattern := regexp.MustCompile(`(?i)^\#+ +\[unreleased\]`)
 	unreleasedHeaderIndex := -1
-	linkUnreleasedPattern := regexp.MustCompile(`(?i)^\[unreleased\]: (.+)`)
+	// Match a URL on the form scheme://domain/user/repo
+	linkUnreleasedPattern := regexp.MustCompile(`(?i)^\[unreleased\]: (?P<url>[a-z]+?://[^/]+/(?P<user>[^/]+)/(?P<repo>[^/]+))`)
 	linkUnreleasedIndex := -1
 
 	var lines []string
@@ -62,7 +63,9 @@ func updateReleaseChangelog(changelog string, release string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("invalid url: %s", match[1])
 	}
-	url.Path = fmt.Sprintf("compare/%s...HEAD", release)
+
+	path := url.Path
+	url.Path = fmt.Sprintf("%s/compare/%s...HEAD", path, release)
 	unreleasedLink := fmt.Sprintf("[Unreleased]: %s", url)
 
 	if insertIndex < len(lines) {
@@ -75,9 +78,9 @@ func updateReleaseChangelog(changelog string, release string) (string, error) {
 		} else {
 			log.Fatalf("cannot find previous version from %q", line)
 		}
-		url.Path = fmt.Sprintf("compare/%s...%s", previousRelease, release)
+		url.Path = fmt.Sprintf("%s/compare/%s...%s", path, previousRelease, release)
 	} else {
-		url.Path = fmt.Sprintf("releases/tag/%s", release)
+		url.Path = fmt.Sprintf("%s/releases/tag/%s", path, release)
 	}
 
 	releaseLink := fmt.Sprintf("[%s]: %s", release, url)
