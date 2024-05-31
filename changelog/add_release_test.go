@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRelease(t *testing.T) {
+func TestAddRelease(t *testing.T) {
 	testCases := []struct {
 		changelog string
 		release   string

@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFuckingChangelog(t *testing.T) {
+func TestAddPullRequest(t *testing.T) {
 	defaultItemTemplate := `* [PR-{{ .Number }}]({{ .Url }})
   {{ .Title }}`
 	testCases := []struct {
