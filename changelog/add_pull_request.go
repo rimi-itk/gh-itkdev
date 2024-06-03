@@ -58,7 +58,7 @@ func addPullRequest(changelog string, pr pullRequest, itemTemplate string) (stri
 	return strings.Join(lines, "\n") + "\n", nil
 }
 
-func FuckingChangelog(name string, itemTemplate string) {
+func AddPullRequest(name string, entryTemplate string) {
 	b, err := os.ReadFile(name)
 	if err != nil {
 		log.Fatal(err)
@@ -74,7 +74,7 @@ func FuckingChangelog(name string, itemTemplate string) {
 		log.Fatalf("error getting pull request: %s\n", err)
 	}
 
-	updatedChangelog, err := addPullRequest(changelog, pr, itemTemplate)
+	updatedChangelog, err := addPullRequest(changelog, pr, entryTemplate)
 	if err != nil {
 		log.Fatalf("error adding pull request: %s\n", err)
 	}

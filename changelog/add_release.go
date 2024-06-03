@@ -111,7 +111,7 @@ func updateReleaseChangelog(changelog string, release string) (string, error) {
 	return strings.Join(lines, "\n") + "\n", nil
 }
 
-func Release(release string, base string, name string, commit bool) {
+func AddRelease(release string, base string, name string, commit bool) {
 	b, err := os.ReadFile(name)
 	if err != nil {
 		log.Fatal(err)

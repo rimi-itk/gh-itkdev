@@ -25,7 +25,7 @@ gh extension install .
 
 ## Usage
 
-### `changelog`
+### `gh itkdev changelog`
 
 Manage changelog based on [keep a changelog](https://keepachangelog.com/en/1.1.0/):
 
@@ -36,20 +36,42 @@ gh itkdev changelog --help
 Create changelog:
 
 ```shell
-gh itkdev changelog --create
+gh itkdev changelog create
 ```
 
-Update changelog for a pull request:
+Add pull request to changelog:
 
 ```shell
-gh itkdev changelog --fucking-changelog
+gh itkdev changelog add-pull-request
 ```
 
-Update changelog for a release (`«tag»`):
+Prepare a new release:
 
 ```shell
-gh itkdev changelog --release «tag»
+gh itkdev changelog add-release «tag»
 ```
+
+## Configuration
+
+Default option values can be set in `.gh-itkdev.yaml` in the project folder or in `$HOME`.
+
+``` yaml
+changelog:
+  «sub command»:
+    «option»: «value»
+```
+
+### Example
+
+Set the default branch for `add-release` to `main`:
+
+``` yaml
+changelog:
+  add-release:
+    base: main
+```
+
+Use `gh itkdev config` to dump the current config.
 
 ## Development
 
