@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/rimi-itk/gh-itkdev/cmd/changelog"
 	"github.com/spf13/cobra"
@@ -37,9 +38,9 @@ func initConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			fmt.Println("Unable to read config: ", err)
+			log.Fatalf("Unable to read config file %s: %s\n", viper.ConfigFileUsed(), err)
 		}
 	} else {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Printf("Using config file %s\n", viper.ConfigFileUsed())
 	}
 }

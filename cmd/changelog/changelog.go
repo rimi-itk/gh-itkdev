@@ -14,6 +14,6 @@ var (
 )
 
 func init() {
-	ChangelogCmd.Flags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
-	viper.BindPFlag("changelog.changelog", ChangelogCmd.Flags().Lookup("changelog"))
+	ChangelogCmd.PersistentFlags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
+	viper.BindPFlag("changelog.changelog", ChangelogCmd.PersistentFlags().Lookup("changelog"))
 }

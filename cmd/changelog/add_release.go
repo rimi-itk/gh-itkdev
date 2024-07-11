@@ -37,11 +37,11 @@ func init() {
 	viperPrefix := "changelog.add-release."
 	flagName := "base"
 	addPullRequestCmd.Flags().StringVarP(&base, flagName, "", base, "base branch for release")
-	viper.BindPFlag(viperPrefix+flagName, createCmd.Flags().Lookup(flagName))
+	viper.BindPFlag(viperPrefix+flagName, addReleaseCmd.Flags().Lookup(flagName))
 
 	flagName = "commit"
 	addPullRequestCmd.Flags().BoolVarP(&commit, flagName, "", commit, "commit changes")
-	viper.BindPFlag(viperPrefix+flagName, createCmd.Flags().Lookup(flagName))
+	viper.BindPFlag(viperPrefix+flagName, addReleaseCmd.Flags().Lookup(flagName))
 
 	ChangelogCmd.AddCommand(addReleaseCmd)
 }
