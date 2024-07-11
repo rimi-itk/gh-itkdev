@@ -36,11 +36,11 @@ gh itkdev changelog add-release v0.1.0
 func init() {
 	viperPrefix := "changelog.add-release."
 	flagName := "base"
-	addPullRequestCmd.Flags().StringVarP(&base, flagName, "", base, "base branch for release")
+	addReleaseCmd.Flags().StringVarP(&base, flagName, "", base, "base branch for release")
 	viper.BindPFlag(viperPrefix+flagName, addReleaseCmd.Flags().Lookup(flagName))
 
 	flagName = "commit"
-	addPullRequestCmd.Flags().BoolVarP(&commit, flagName, "", commit, "commit changes")
+	addReleaseCmd.Flags().BoolVarP(&commit, flagName, "", commit, "commit changes")
 	viper.BindPFlag(viperPrefix+flagName, addReleaseCmd.Flags().Lookup(flagName))
 
 	ChangelogCmd.AddCommand(addReleaseCmd)
