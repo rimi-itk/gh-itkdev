@@ -10,6 +10,10 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "gh-itkdev",
 	Short: "GitHub CLI helper for ITK Development",
+	Annotations: map[string]string{
+		// https://github.com/spf13/cobra/blob/main/site/content/user_guide.md#creating-a-plugin
+		cobra.CommandDisplayNameAnnotation: "gh itkdev",
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
