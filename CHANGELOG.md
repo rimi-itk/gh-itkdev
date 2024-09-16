@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-9](https://github.com/rimi-itk/gh-itkdev/pull/9)
+  Added alternative base branches
 * [PR-7](https://github.com/rimi-itk/gh-itkdev/pull/7)
   Fixed URL parsing
 
