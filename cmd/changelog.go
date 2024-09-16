@@ -15,9 +15,9 @@ var (
 	pullRequestItemTemplate string = `* [PR-{{ .Number }}]({{ .Url }})
   {{ .Title }}`
 
-	release    string
-	baseBranch string = "develop"
-	commit     bool   = false
+	release      string
+	baseBranches      = []string{"develop", "main", "master"}
+	commit       bool = false
 
 	changelogName string = "CHANGELOG.md"
 
@@ -30,7 +30,7 @@ var (
 			} else if fuckingChangelog {
 				changelog.FuckingChangelog(changelogName, pullRequestItemTemplate)
 			} else if release != "" {
-				changelog.Release(release, baseBranch, changelogName, commit)
+				changelog.Release(release, baseBranches, changelogName, commit)
 			} else {
 				cmd.Usage()
 			}
@@ -47,7 +47,7 @@ func init() {
 	changelogCmd.Flags().StringVarP(&pullRequestItemTemplate, "item-template", "", pullRequestItemTemplate, "pull request item template")
 
 	changelogCmd.Flags().StringVarP(&release, "release", "", "", "create a release branch with updated changelog")
-	changelogCmd.Flags().StringVarP(&baseBranch, "base", "", baseBranch, "base branch for release")
+	changelogCmd.Flags().StringSliceVarP(&baseBranches, "base", "", baseBranches, "base branch for release")
 	changelogCmd.Flags().BoolVarP(&commit, "commit", "", commit, "commit changes")
 
 	changelogCmd.Flags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
