@@ -13,21 +13,14 @@ import (
 	"time"
 )
 
-func createReleaseBranch(release string, baseBranches []string) (string, error) {
-	if len(baseBranches) == 0 {
-		return "", fmt.Errorf("All attempts to create the release branch failed.")
-	}
-
+func createReleaseBranch(release string, base string) (string, error) {
 	branch := "release/" + release
-	base := baseBranches[0]
-
 	cmd := exec.Command("git", "checkout", "-b", branch, base)
-	_, err := cmd.CombinedOutput()
-
-	//if error occurred, retry with next base
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return createReleaseBranch(release, baseBranches[1:])
+		return "", fmt.Errorf("%s: %s", output, err)
 	}
+
 	return branch, nil
 }
 
@@ -118,7 +111,7 @@ func updateReleaseChangelog(changelog string, release string) (string, error) {
 	return strings.Join(lines, "\n") + "\n", nil
 }
 
-func Release(release string, baseBranches []string, name string, commit bool) {
+func Release(release string, base string, name string, commit bool) {
 	b, err := os.ReadFile(name)
 	if err != nil {
 		log.Fatal(err)
@@ -130,7 +123,7 @@ func Release(release string, baseBranches []string, name string, commit bool) {
 		log.Fatal(err)
 	}
 
-	branch, err := createReleaseBranch(release, baseBranches)
+	branch, err := createReleaseBranch(release, base)
 	if err != nil {
 		log.Fatal(err)
 	}

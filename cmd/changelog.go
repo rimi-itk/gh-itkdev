@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/rimi-itk/gh-itkdev/changelog"
 	"github.com/spf13/cobra"
+	"os/exec"
 )
 
 // changelogCmd represents the changelog command
@@ -15,9 +15,19 @@ var (
 	pullRequestItemTemplate string = `* [PR-{{ .Number }}]({{ .Url }})
   {{ .Title }}`
 
-	release      string
-	baseBranches      = []string{"develop", "main", "master"}
-	commit       bool = false
+	release    string
+	baseBranch string = func() string {
+		branches := []string{"develop", "main", "master"}
+		for _, branch := range branches {
+			cmd := exec.Command("git", "rev-parse", "--verify", "-b", branch)
+			if _, err := cmd.CombinedOutput(); err == nil {
+				return branch
+			}
+		}
+		// Fallback if no other suitable branch is found.
+		return branches[0]
+	}()
+	commit bool = false
 
 	changelogName string = "CHANGELOG.md"
 
@@ -30,7 +40,7 @@ var (
 			} else if fuckingChangelog {
 				changelog.FuckingChangelog(changelogName, pullRequestItemTemplate)
 			} else if release != "" {
-				changelog.Release(release, baseBranches, changelogName, commit)
+				changelog.Release(release, baseBranch, changelogName, commit)
 			} else {
 				cmd.Usage()
 			}
@@ -47,7 +57,7 @@ func init() {
 	changelogCmd.Flags().StringVarP(&pullRequestItemTemplate, "item-template", "", pullRequestItemTemplate, "pull request item template")
 
 	changelogCmd.Flags().StringVarP(&release, "release", "", "", "create a release branch with updated changelog")
-	changelogCmd.Flags().StringSliceVarP(&baseBranches, "base", "", baseBranches, "base branch for release")
+	changelogCmd.Flags().StringVarP(&baseBranch, "base", "", baseBranch, "base branch for release")
 	changelogCmd.Flags().BoolVarP(&commit, "commit", "", commit, "commit changes")
 
 	changelogCmd.Flags().StringVarP(&changelogName, "changelog", "", changelogName, "changelog name")
