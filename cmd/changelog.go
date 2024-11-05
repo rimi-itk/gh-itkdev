@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
+
 	"github.com/rimi-itk/gh-itkdev/changelog"
 	"github.com/spf13/cobra"
-	"os/exec"
 )
 
 // changelogCmd represents the changelog command
@@ -12,8 +13,11 @@ var (
 	create bool
 
 	fuckingChangelog        bool
-	pullRequestItemTemplate string = `* [PR-{{ .Number }}]({{ .Url }})
-  {{ .Title }}`
+	pullRequestItemTemplate string = func() string {
+		format, _ := changelog.DetectPullRequestEntryFormat(changelogName)
+
+		return format
+	}()
 
 	release    string
 	baseBranch string = func() string {
