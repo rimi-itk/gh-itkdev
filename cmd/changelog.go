@@ -19,7 +19,7 @@ var (
 	baseBranch string = func() string {
 		branches := []string{"develop", "main", "master"}
 		for _, branch := range branches {
-			cmd := exec.Command("git", "rev-parse", "--verify", "-b", branch)
+			cmd := exec.Command("git", "rev-parse", "--verify", "--branch", branch)
 			if _, err := cmd.CombinedOutput(); err == nil {
 				return branch
 			}
