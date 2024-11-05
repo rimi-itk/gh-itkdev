@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os/exec"
 
 	"github.com/rimi-itk/gh-itkdev/changelog"
 	"github.com/spf13/cobra"
@@ -16,8 +17,19 @@ var (
   {{ .Title }}`
 
 	release    string
-	baseBranch string = "develop"
-	commit     bool   = false
+	baseBranch string = func() string {
+		branches := []string{"develop", "main", "master"}
+		for _, branch := range branches {
+			cmd := exec.Command("git", "rev-parse", "--verify", "--branch", branch)
+			if _, err := cmd.CombinedOutput(); err == nil {
+				return branch
+			}
+		}
+
+		// Fallback if no other suitable branch is found.
+		return branches[0]
+	}()
+	commit bool = false
 
 	changelogName string = "CHANGELOG.md"
 
