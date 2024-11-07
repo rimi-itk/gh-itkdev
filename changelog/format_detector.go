@@ -23,10 +23,6 @@ func DetectPullRequestEntryFormat(changelog string) (string, error) {
 		}
 	}
 
-	if len(templates) < 1 {
-		return "", fmt.Errorf("cannot detect pull request entry format")
-	}
-
 	return templates[len(templates)-1].template, nil
 }
 
@@ -52,6 +48,7 @@ func getPullRequestEntryTemplates() []struct {
 
 		// The default – must come last.
 		{
+			// Match any non-empty changelog and provide a default template.
 			regexp.MustCompile("."),
 			`* [PR-{{ .Number }}]({{ .Url }})
   {{ .Title }}`,
